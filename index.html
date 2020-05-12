@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GIS</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+		<link rel="stylesheet" href="css/MarkerCluster.css" />
+		<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+		<link rel="stylesheet" type="text/css" href="css/own_style.css">
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+		<script src="js/leaflet-hash.js"></script>
+		<script src="js/Autolinker.min.js"></script>
+		<script src="js/leaflet.markercluster.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+		<div id="map"></div>
+		<script src="data/exp_JALANLN50K.js"></script>
+		<script src="data/exp_PEMUKIMANAR50K.js"></script>
+		<script src="data/exp_titikdesaterdampak.js"></script>
+		<script src="data/exp_ADMINISTRASIKECAMATANAR50K.js"></script>
+		<script>
+		var map = L.map('map', {
+			zoomControl:true, maxZoom:19
+		}).fitBounds([[-5.89470861503,105.512627888],[-5.63224232623,105.97707748]]);
+		var hash = new L.Hash(map);
+		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
+		var feature_group = new L.featureGroup([]);
+		var raster_group = new L.LayerGroup([]);
+		var basemap_0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});	
+		basemap_0.addTo(map);
+		var basemap_1 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});	
+		var layerOrder=new Array();
+		function pop_ADMINISTRASIKECAMATANAR50K(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Kecamatan</th><td>' + Autolinker.link(String(feature.properties['Kecamatan'])) + '</td></tr><tr><th scope="row">Kategori</th><td>' + Autolinker.link(String(feature.properties['Kategori'])) + '</td></tr><tr><th scope="row">Korban</th><td>' + Autolinker.link(String(feature.properties['Korban'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		function doStyleADMINISTRASIKECAMATANAR50K(feature) {
+				return {
+					color: '#000000',
+					fillColor: '#89ac79',
+					weight: 1.3,
+					dashArray: '',
+					opacity: 1.0,
+					fillOpacity: 1.0
+				};
+
+		}
+		var exp_ADMINISTRASIKECAMATANAR50KJSON = new L.geoJson(exp_ADMINISTRASIKECAMATANAR50K,{
+			onEachFeature: pop_ADMINISTRASIKECAMATANAR50K,
+			style: doStyleADMINISTRASIKECAMATANAR50K
+		});
+		layerOrder[layerOrder.length] = exp_ADMINISTRASIKECAMATANAR50KJSON;
+		for (index = 0; index < layerOrder.length; index++) {
+			feature_group.removeLayer(layerOrder[index]);feature_group.addLayer(layerOrder[index]);
+		}
+		//add comment sign to hide this layer on the map in the initial view.
+		feature_group.addLayer(exp_ADMINISTRASIKECAMATANAR50KJSON);
+		function pop_titikdesaterdampak(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">ogc_fid</th><td>' + Autolinker.link(String(feature.properties['ogc_fid'])) + '</td></tr><tr><th scope="row">nama</th><td>' + Autolinker.link(String(feature.properties['nama'])) + '</td></tr><tr><th scope="row">kategori</th><td>' + Autolinker.link(String(feature.properties['kategori'])) + '</td></tr><tr><th scope="row">korban</th><td>' + Autolinker.link(String(feature.properties['korban'])) + '</td></tr><tr><th scope="row">foto</th><td>' + Autolinker.link(String(feature.properties['foto'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_titikdesaterdampakJSON = new L.geoJson(exp_titikdesaterdampak,{
+			onEachFeature: pop_titikdesaterdampak,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 10.0,
+					fillColor: '#20b606',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_grouptitikdesaterdampakJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_grouptitikdesaterdampakJSON.addLayer(exp_titikdesaterdampakJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_grouptitikdesaterdampakJSON.addTo(map);
+		function pop_PEMUKIMANAR50K(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">NAMOBJ</th><td>' + Autolinker.link(String(feature.properties['NAMOBJ'])) + '</td></tr><tr><th scope="row">FCODE</th><td>' + Autolinker.link(String(feature.properties['FCODE'])) + '</td></tr><tr><th scope="row">REMARK</th><td>' + Autolinker.link(String(feature.properties['REMARK'])) + '</td></tr><tr><th scope="row">SRS_ID</th><td>' + Autolinker.link(String(feature.properties['SRS_ID'])) + '</td></tr><tr><th scope="row">LCODE</th><td>' + Autolinker.link(String(feature.properties['LCODE'])) + '</td></tr><tr><th scope="row">METADATA</th><td>' + Autolinker.link(String(feature.properties['METADATA'])) + '</td></tr><tr><th scope="row">SHAPE_Leng</th><td>' + Autolinker.link(String(feature.properties['SHAPE_Leng'])) + '</td></tr><tr><th scope="row">SHAPE_Area</th><td>' + Autolinker.link(String(feature.properties['SHAPE_Area'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		function doStylePEMUKIMANAR50K(feature) {
+				return {
+					color: '#000000',
+					fillColor: '#c241d8',
+					weight: 1.3,
+					dashArray: '',
+					opacity: 1.0,
+					fillOpacity: 1.0
+				};
+
+		}
+		var exp_PEMUKIMANAR50KJSON = new L.geoJson(exp_PEMUKIMANAR50K,{
+			onEachFeature: pop_PEMUKIMANAR50K,
+			style: doStylePEMUKIMANAR50K
+		});
+		layerOrder[layerOrder.length] = exp_PEMUKIMANAR50KJSON;
+		for (index = 0; index < layerOrder.length; index++) {
+			feature_group.removeLayer(layerOrder[index]);feature_group.addLayer(layerOrder[index]);
+		}
+		//add comment sign to hide this layer on the map in the initial view.
+		feature_group.addLayer(exp_PEMUKIMANAR50KJSON);
+		function pop_JALANLN50K(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">NAMRJL</th><td>' + Autolinker.link(String(feature.properties['NAMRJL'])) + '</td></tr><tr><th scope="row">KONRJL</th><td>' + Autolinker.link(String(feature.properties['KONRJL'])) + '</td></tr><tr><th scope="row">MATRJL</th><td>' + Autolinker.link(String(feature.properties['MATRJL'])) + '</td></tr><tr><th scope="row">FGSRJL</th><td>' + Autolinker.link(String(feature.properties['FGSRJL'])) + '</td></tr><tr><th scope="row">UTKRJL</th><td>' + Autolinker.link(String(feature.properties['UTKRJL'])) + '</td></tr><tr><th scope="row">TOLRJL</th><td>' + Autolinker.link(String(feature.properties['TOLRJL'])) + '</td></tr><tr><th scope="row">WLYRJL</th><td>' + Autolinker.link(String(feature.properties['WLYRJL'])) + '</td></tr><tr><th scope="row">AUTRJL</th><td>' + Autolinker.link(String(feature.properties['AUTRJL'])) + '</td></tr><tr><th scope="row">KLSRJL</th><td>' + Autolinker.link(String(feature.properties['KLSRJL'])) + '</td></tr><tr><th scope="row">SPCRJL</th><td>' + Autolinker.link(String(feature.properties['SPCRJL'])) + '</td></tr><tr><th scope="row">JPARJL</th><td>' + Autolinker.link(String(feature.properties['JPARJL'])) + '</td></tr><tr><th scope="row">ARHRJL</th><td>' + Autolinker.link(String(feature.properties['ARHRJL'])) + '</td></tr><tr><th scope="row">STARJL</th><td>' + Autolinker.link(String(feature.properties['STARJL'])) + '</td></tr><tr><th scope="row">KLLRJL</th><td>' + Autolinker.link(String(feature.properties['KLLRJL'])) + '</td></tr><tr><th scope="row">MEDRJL</th><td>' + Autolinker.link(String(feature.properties['MEDRJL'])) + '</td></tr><tr><th scope="row">LOCRJL</th><td>' + Autolinker.link(String(feature.properties['LOCRJL'])) + '</td></tr><tr><th scope="row">JARRJL</th><td>' + Autolinker.link(String(feature.properties['JARRJL'])) + '</td></tr><tr><th scope="row">FCODE</th><td>' + Autolinker.link(String(feature.properties['FCODE'])) + '</td></tr><tr><th scope="row">REMARK</th><td>' + Autolinker.link(String(feature.properties['REMARK'])) + '</td></tr><tr><th scope="row">SRS_ID</th><td>' + Autolinker.link(String(feature.properties['SRS_ID'])) + '</td></tr><tr><th scope="row">LCODE</th><td>' + Autolinker.link(String(feature.properties['LCODE'])) + '</td></tr><tr><th scope="row">METADATA</th><td>' + Autolinker.link(String(feature.properties['METADATA'])) + '</td></tr><tr><th scope="row">SHAPE_Leng</th><td>' + Autolinker.link(String(feature.properties['SHAPE_Leng'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		function doStyleJALANLN50K(feature) {
+				return {
+					weight: 1.3,
+					color: '#226693',
+					dashArray: '',
+					opacity: 1.0,
+					fillOpacity: 1.0
+				};
+		}
+		var exp_JALANLN50KJSON = new L.geoJson(exp_JALANLN50K,{
+			onEachFeature: pop_JALANLN50K,
+			style: doStyleJALANLN50K
+		});
+		layerOrder[layerOrder.length] = exp_JALANLN50KJSON;
+		for (index = 0; index < layerOrder.length; index++) {
+			feature_group.removeLayer(layerOrder[index]);feature_group.addLayer(layerOrder[index]);
+		}
+		//add comment sign to hide this layer on the map in the initial view.
+		feature_group.addLayer(exp_JALANLN50KJSON);
+
+		feature_group.addTo(map);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+		};
+		title.update = function () {
+			this._div.innerHTML = '<h2>lamsel</h2>bencana'
+		};
+		title.addTo(map);
+	var baseMaps = {
+		'OSM Standard': basemap_0,
+		'OSM Black & White': basemap_1};
+		L.control.layers(baseMaps,{"JALANLN50K": exp_JALANLN50KJSON,"PEMUKIMANAR50K": exp_PEMUKIMANAR50KJSON,"titikdesaterdampak": cluster_grouptitikdesaterdampakJSON,"ADMINISTRASIKECAMATANAR50K": exp_ADMINISTRASIKECAMATANAR50KJSON},{collapsed:false}).addTo(map);
+		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	</script>
+</body>
+</html>
